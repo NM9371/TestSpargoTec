@@ -18,22 +18,21 @@ namespace TestSpargoTec
         {
             DBInteractor.setRangesPharmacies(); //Формирование ассортимента в аптеках
 
-            Pharmacy newPharmacy = DBInteractor.addPharmacy("Новая аптека", "Новая улица", "3813215186"); //Добавление аптеки
-            Stock newStock = DBInteractor.addStock(10, "Новый склад" ); //Добавление склада
             Medicine newMedicine = DBInteractor.addMedicine("Новый товар"); //Добавление товара
-            Party newParty = DBInteractor.addParty(10, 10, 15); //Добавление партии
+            Pharmacy newPharmacy = DBInteractor.addPharmacy("Новая аптека", "Новая улица", "3813215186"); //Добавление аптеки
+            Stock newStock = DBInteractor.addStock(newPharmacy.Id, "Новый склад" ); //Добавление склада
+            Party newParty = DBInteractor.addParty(newMedicine.Id, newStock.Id, 15); //Добавление партии
 
-            int lastPharmacyId = PharmaciesList.OrderBy(Pharmacy => Pharmacy.Id).Last().Id; //Последний Id аптеки для удаления
-            DBInteractor.deletePharmacy(10); //Удаление аптеки
+            DBInteractor.deletePharmacy(newPharmacy.Id); //Удаление аптеки (ее складов и их партий)
 
-            int lastStockId = StocksList.OrderBy(Stock => Stock.Id).Last().Id; //Последний Id склада для удаления
-            DBInteractor.deleteStock(10); //Удаление склада
+            newStock = DBInteractor.addStock(newPharmacy.Id, "Новый склад"); //Добавление склада
+            newParty = DBInteractor.addParty(newMedicine.Id, newStock.Id, 15); //Добавление партии
+            DBInteractor.deleteStock(newStock.Id); //Удаление склада (и его партий)
 
-            int lastMedicineId = MedicinesList.OrderBy(Medicine => Medicine.Id).Last().Id; //Последний Id товара для удаления
-            DBInteractor.deleteMedicine(10); //Удаление товара
+            newParty = DBInteractor.addParty(newMedicine.Id, newStock.Id, 15); //Добавление партии
+            DBInteractor.deleteParty(newParty.Id); //Удаление партии
 
-            int lastPartyId = PartiesList.OrderBy(Party => Party.Id).Last().Id; //Последний Id партии для удаления
-            DBInteractor.deleteParty(lastPartyId); //Удаление партии
+            DBInteractor.deleteMedicine(newMedicine.Id); //Удаление товара
 
 
             while (true) //Просмотр ассортимента аптеки
@@ -53,10 +52,10 @@ namespace TestSpargoTec
                     if (Pharmacy.Range.Count==0)
                     {
                         Console.WriteLine("Пусто");
-                    } else { 
+                    } else {
+                        Console.WriteLine("Ассортимент {0}", Pharmacy.Name);
                         foreach (KeyValuePair<Medicine, int> Dict in Pharmacy.Range)
                         {
-                            Console.WriteLine("Ассортимент {0}", Pharmacy.Name);
                             Console.WriteLine("Наименование: {0} Кол-во: {1}", Dict.Key.Name, Dict.Value);
                         }
                     }

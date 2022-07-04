@@ -180,7 +180,7 @@ namespace TestSpargoTec.DataBase
                 List<Party> filteredPartysList = Program.PartiesList.Where(Party => Party.MedicineId == Medicine.Id).ToList();
                 foreach (Party Party in filteredPartysList)
                 {
-                    deleteParty(Program.PartiesList, Party.Id);
+                    deleteParty(Party.Id);
                 }
                 Medicine.deleteFromDB();
                 Program.MedicinesList.Remove(Medicine);

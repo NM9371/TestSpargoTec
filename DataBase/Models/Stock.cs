@@ -11,7 +11,7 @@ namespace TestSpargoTec.Database.Models
         {
             using (SqlConnection con = new SqlConnection(Program.conString))
             {
-                SqlCommand cmd = new SqlCommand("delete * from Stocks where id=" + this.Id.ToString(), con);
+                SqlCommand cmd = new SqlCommand("delete from Stocks where id=" + this.Id.ToString(), con);
                 con.Open();
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
